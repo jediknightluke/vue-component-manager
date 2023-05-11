@@ -1,0 +1,9 @@
+# .gitignore
+
+
+django_app/chessapp_api/.env
+django_app/chessapp_api/__pycache__/
+django_app/authentication/__pycache__/
+
+vue_app/.env.local
+vue_app/node_modules/

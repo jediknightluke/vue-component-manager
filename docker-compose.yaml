@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+  django_app:
+    build: ./django_app
+    command: python manage.py runserver 0.0.0.0:2550
+    volumes:
+      - ./django_app:/app
+    ports:
+      - "2550:2550"
+
+  vue_app:
+    build: ./vue_app
+    command: yarn serve
+    volumes:
+      - ./vue_app:/app
+    ports:
+      - "8081:8081"
