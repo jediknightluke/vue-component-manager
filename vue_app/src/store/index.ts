@@ -23,6 +23,12 @@ export default createStore({
     setUserId({ commit }, userId) {
       commit("setUserId", userId);
     },
+    setToken({ commit }, token) {
+      commit("setToken", token);
+    },
+    removeToken({ commit }) {
+      commit("removeToken");
+    },
   },
   modules: {},
 });

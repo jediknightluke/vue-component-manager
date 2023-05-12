@@ -1,3 +1,19 @@
+<!--
+
+UserLogin.vue
+
+The user login the web app.
+Written by: Luke Melton
+Date: 04/10/2023
+
+
+
+
+
+-->
+
+
+
 <template>
   <v-dialog v-model="dialog" max-width="500">
     <v-card>
@@ -52,9 +68,12 @@ export default defineComponent({
       dialog: true,
     };
   },
+  setup() {
+    const store = useStore();
+    return { store };
+  },
   methods: {
     async login() {
-      const store = useStore();
       try {
         const response = await axios.post(process.env.VUE_APP_API_URL,
           {
@@ -64,7 +83,7 @@ export default defineComponent({
         );
 
         if (response.status === 200) {
-          store.commit("setToken", response.data.token);
+          this.store.commit("setToken", response.data.token);
           this.$emit("login-success");
         } else {
           this.errors = {
