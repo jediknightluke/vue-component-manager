@@ -1,9 +1,25 @@
+<!--
+
+App.vue
+
+The entry page for the web app.
+Written by: Luke Melton
+Date: 04/10/2023
+
+
+
+
+
+
+-->
+
+
 <template>
   <div id="app">
     <v-app :style="{ backgroundColor: colors.background }">
       <v-app-bar :color="colors.topBar" app v-if="isLoggedIn && showTopBar">
         <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-        <v-toolbar-title>My App</v-toolbar-title>
+        <v-toolbar-title>Component Manager</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-btn icon @click="showTopBar = false">
           <v-icon>mdi-close</v-icon>
@@ -398,6 +414,7 @@ export default defineComponent({
       } else {
         dialog.value = true;
       }
+      document.title = 'Component Manager';
     });
 
     return {
