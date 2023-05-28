@@ -73,17 +73,58 @@ export default defineComponent({
     return { store };
   },
   methods: {
-    async login() {
-      try {
-        const response = await axios.post(process.env.VUE_APP_API_URL,
-          {
-            email: this.email,
-            password: this.password,
+    getCookie(name: string): string | null {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        let cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+          let cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
           }
-        );
+        }
+      }
+      return cookieValue;
+    },
+    async login() {
+      console.log("Submitting Login Information");
+      console.log(this.email)
+      console.log(this.password)
+      try {
+        let formData = new FormData();
+        formData.append('email', this.email);
+        formData.append('password', this.password);
+        let csrfToken = this.getCookie('csrftoken');
+        if (csrfToken !== null) {
+          formData.append('csrfmiddlewaretoken', csrfToken);
+        } else {
+          // handle the case when csrfToken is null, this depends on your application logic
+          // you can either not append the csrfmiddlewaretoken or use a default value
+          // For example:
+          console.log('CSRF token is missing. Please ensure cookies are enabled.');
+        }
+
+        axios.defaults.xsrfCookieName = 'csrftoken'; // the name of the cookie Django is using for CSRF validation.
+        axios.defaults.xsrfHeaderName = "X-CSRFToken"; // the name of the HTTP header Django is expecting for CSRF validation.
+
+        const response = await axios.post(`${process.env.VUE_APP_API_BASE_URL}/api/auth/login/`, formData, {
+          headers: { 
+            'Content-Type': 'multipart/form-data',
+          } 
+        });
+
+
+
+
 
         if (response.status === 200) {
           this.store.commit("setToken", response.data.token);
+
+          // Set the axios authorization header
+          axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
+          axios.defaults.headers.common['Authorization'] = `Token ${response.data.token}`;
+          this.$emit("login-success");
           this.$emit("login-success");
         } else {
           this.errors = {
@@ -93,6 +134,7 @@ export default defineComponent({
           };
         }
       } catch (error) {
+        console.log(error)
         this.errors = {
           email: [],
           password: [],
@@ -100,8 +142,10 @@ export default defineComponent({
         };
       }
     },
-  },
-});
+      },
+    });
+
+
 </script>
 
 <style scoped>
@@ -132,3 +176,5 @@ export default defineComponent({
   margin-left: 8px;
 }
 </style>
+
+
