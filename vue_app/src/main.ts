@@ -7,9 +7,12 @@ import axios from "axios";
 
 axios.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      config.headers["Authorization"] = `Token ${token}`;
+    // Exclude login route from setting Authorization header
+    if (config.url !== `${process.env.VUE_APP_API_BASE_URL}/api/auth/login/`) {
+      const token = localStorage.getItem("token");
+      if (token) {
+        config.headers["Authorization"] = `Token ${token}`;
+      }
     }
     return config;
   },

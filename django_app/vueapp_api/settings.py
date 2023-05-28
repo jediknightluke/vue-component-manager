@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'authentication',
     'corsheaders',
     'rest_framework.authtoken',
+    'core',
 ]
 
 MIDDLEWARE = [
@@ -101,6 +102,7 @@ DATABASES = {
         'PORT': os.environ.get('DJANGO_DB_PORT'),
     }
 }
+
 
 
 # Password validation
@@ -168,5 +170,8 @@ SIMPLE_JWT = {
 
 
 CORS_ALLOW_ALL_ORIGINS = True
+CORS_ORIGIN_WHITELIST = [
+    "http://localhost:8081",
+]
 # settings.py
 AUTH_USER_MODEL = 'authentication.CustomUser'
